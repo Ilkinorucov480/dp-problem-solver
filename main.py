@@ -1,6 +1,7 @@
 from problems.knapsack import KnapsackSolver
 from problems.lcs import LCSSolver
 from problems.lis import LISSolver
+from problems.edit_distance import EditDistanceSolver
 
 
 def main():
@@ -24,6 +25,12 @@ def main():
         nums=[10, 9, 2, 5, 3, 7, 101, 18]
     )
     lis_solver.run_all()
+
+    edit_distance_solver = EditDistanceSolver(
+        word1="horse",
+        word2="ros"
+    )
+    edit_distance_solver.run_all()
 
 
 if __name__ == "__main__":

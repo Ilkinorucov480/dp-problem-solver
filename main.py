@@ -1,5 +1,6 @@
 from problems.knapsack import KnapsackSolver
 from problems.lcs import LCSSolver
+from problems.lis import LISSolver
 
 
 def main():
@@ -18,6 +19,11 @@ def main():
         text2="BDCABA"
     )
     lcs_solver.run_all()
+
+    lis_solver = LISSolver(
+        nums=[10, 9, 2, 5, 3, 7, 101, 18]
+    )
+    lis_solver.run_all()
 
 
 if __name__ == "__main__":

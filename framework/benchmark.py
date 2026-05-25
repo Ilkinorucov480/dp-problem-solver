@@ -2,11 +2,14 @@ import time
 import tracemalloc
 import csv
 import os
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class Benchmark:
     """
-    Benchmark class-ı hər DP metodunun işləmə vaxtını və yaddaş istifadəsini ölçür.
+    Benchmark class-ı DP metodlarının işləmə vaxtını, yaddaş istifadəsini ölçür,
+    nəticələri CSV faylına yazır və qrafiklər yaradır.
     """
 
     @staticmethod
@@ -81,3 +84,74 @@ class Benchmark:
                     f"{item['optimized']['time']:.6f}",
                     f"{item['optimized']['memory_kb']:.2f}"
                 ])
+
+    @staticmethod
+    def generate_charts(
+        csv_path="results/benchmark_results.csv",
+        output_dir="results/charts"
+    ):
+        """
+        CSV faylındakı benchmark nəticələrinə əsasən
+        işləmə vaxtı və yaddaş istifadəsi üçün müqayisə qrafikləri yaradır.
+        """
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        data = pd.read_csv(csv_path)
+
+        # Time_Seconds və Memory_KB sütunlarını rəqəmə çeviririk
+        data["Time_Seconds"] = pd.to_numeric(data["Time_Seconds"])
+        data["Memory_KB"] = pd.to_numeric(data["Memory_KB"])
+
+        # 1. Execution Time Comparison Chart
+        plt.figure(figsize=(12, 6))
+
+        for method in data["Method"].unique():
+            method_data = data[data["Method"] == method]
+
+            plt.plot(
+                method_data["Problem"],
+                method_data["Time_Seconds"],
+                marker="o",
+                label=method
+            )
+
+        plt.title("Execution Time Comparison")
+        plt.xlabel("DP Problems")
+        plt.ylabel("Time (seconds)")
+        plt.xticks(rotation=30, ha="right")
+        plt.legend()
+        plt.tight_layout()
+
+        time_chart_path = os.path.join(output_dir, "execution_time_comparison.png")
+        plt.savefig(time_chart_path)
+        plt.close()
+
+        # 2. Memory Usage Comparison Chart
+        plt.figure(figsize=(12, 6))
+
+        for method in data["Method"].unique():
+            method_data = data[data["Method"] == method]
+
+            plt.plot(
+                method_data["Problem"],
+                method_data["Memory_KB"],
+                marker="o",
+                label=method
+            )
+
+        plt.title("Memory Usage Comparison")
+        plt.xlabel("DP Problems")
+        plt.ylabel("Memory (KB)")
+        plt.xticks(rotation=30, ha="right")
+        plt.legend()
+        plt.tight_layout()
+
+        memory_chart_path = os.path.join(output_dir, "memory_usage_comparison.png")
+        plt.savefig(memory_chart_path)
+        plt.close()
+
+        return {
+            "time_chart": time_chart_path,
+            "memory_chart": memory_chart_path
+        }

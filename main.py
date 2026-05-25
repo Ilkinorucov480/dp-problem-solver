@@ -42,8 +42,10 @@ def main():
     all_results.append(matrix_chain_solver.run_all())
 
     Benchmark.save_to_csv(all_results)
+    Benchmark.generate_charts()
 
     print("\nBenchmark results saved to results/benchmark_results.csv")
+    print("Charts saved to results/charts/")
 
 
 if __name__ == "__main__":

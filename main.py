@@ -2,6 +2,7 @@ from problems.knapsack import KnapsackSolver
 from problems.lcs import LCSSolver
 from problems.lis import LISSolver
 from problems.edit_distance import EditDistanceSolver
+from problems.matrix_chain import MatrixChainSolver
 
 
 def main():
@@ -31,6 +32,11 @@ def main():
         word2="ros"
     )
     edit_distance_solver.run_all()
+
+    matrix_chain_solver = MatrixChainSolver(
+        dimensions=[10, 30, 5, 60]
+    )
+    matrix_chain_solver.run_all()
 
 
 if __name__ == "__main__":

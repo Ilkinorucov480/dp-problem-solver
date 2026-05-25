@@ -1,14 +1,10 @@
 from abc import ABC, abstractmethod
+from framework.benchmark import Benchmark
 
 
 class BaseSolver(ABC):
     """
     BaseSolver bütün DP problemləri üçün ümumi baza class-dır.
-
-    Hər problem bu class-dan miras alacaq və 3 əsas metodu yazacaq:
-    1. solve_memoization()
-    2. solve_tabulation()
-    3. solve_optimized()
     """
 
     def __init__(self, name):
@@ -28,22 +24,37 @@ class BaseSolver(ABC):
 
     def run_all(self):
         """
-        Bu metod eyni problem üçün bütün yanaşmaları işlədir.
+        Bu metod eyni problem üçün bütün yanaşmaları benchmark ilə işlədir.
         """
+
         print(f"\nProblem: {self.name}")
         print("-" * 40)
 
-        memo_result = self.solve_memoization()
-        tab_result = self.solve_tabulation()
-        opt_result = self.solve_optimized()
+        memo = Benchmark.measure(self.solve_memoization)
+        tab = Benchmark.measure(self.solve_tabulation)
+        opt = Benchmark.measure(self.solve_optimized)
 
-        print(f"Memoization result: {memo_result}")
-        print(f"Tabulation result: {tab_result}")
-        print(f"Optimized result: {opt_result}")
+        print(
+            f"Memoization result: {memo['result']} | "
+            f"Time: {memo['time']:.6f}s | "
+            f"Memory: {memo['memory_kb']:.2f} KB"
+        )
+
+        print(
+            f"Tabulation result: {tab['result']} | "
+            f"Time: {tab['time']:.6f}s | "
+            f"Memory: {tab['memory_kb']:.2f} KB"
+        )
+
+        print(
+            f"Optimized result: {opt['result']} | "
+            f"Time: {opt['time']:.6f}s | "
+            f"Memory: {opt['memory_kb']:.2f} KB"
+        )
 
         return {
             "problem": self.name,
-            "memoization": memo_result,
-            "tabulation": tab_result,
-            "optimized": opt_result
+            "memoization": memo,
+            "tabulation": tab,
+            "optimized": opt
         }
